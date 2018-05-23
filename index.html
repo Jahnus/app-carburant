@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Tableau Consommation Carburant</title>
+        <meta charset="utf-8">
+        <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="//apps.wialon.com/plugins/wialon/interval/interval.wialon.css"/>
+        <link rel="stylesheet" type="text/css" href="css/style.css"/>
+        <link rel="shortcut icon" href="img/logoOnglet.png">
+        <script src="js/jquery.js"></script>
+        <script src="js/jquery-ui.min.js"></script>
+        <script src="js/jquery.localisation.js"></script>
+        <script src="//apps.wialon.com/plugins/wialon/interval/interval.wialon.min.js"></script>  
+    </head>
+    <body>
+        <div class="top">
+            <img src="img/logo.png" id="logo" alt="logo">
+            <div class="wrap">
+                <h1></h1>
+            </div>
+        </div>
+        <!-- Le loader de ma page-->
+        <div id="loader">
+            <span class="loader loader-quart"></span>
+        </div>
+        <div class="content">
+            <div class="wrap">
+                <div class="head-content">
+                    <div>
+                        <label id="flotte"></label>
+                        <select id="units-group"></select>                        
+                    </div>
+                    <div class="timepicker" id="ranging-time-wrap"></div>
+                    <a title="doc" href="doc/Documentation_App_Conso_Carburant.pdf" target=_blank>
+                        <img src="img/info.png" alt="info" id="logoinfo">
+                    </a>
+                    <a id="btn-print">
+                        <img src="img/print.png" alt="logo print">
+                    </a>
+                </div>
+                <div>
+                    <form name="visuFiltres">
+                        <label class="label-filtre" for="voirOuPas" accesskey="o"><i id="affFiltres"></i></label>
+                        <input name="voirOuPas" type="checkbox" id="voirOuPas" />
+                    </form>
+                    <form name="affichage filtres" id="filtres" class="optionnel">
+                        <fieldset>
+                            <div id="DfiltreConso" class="optionnel col-md-4 col-sm-4 col-xs-6">                                
+                                <div id="DfiltreConsoMax" class="Dfiltres">
+                                    <label for="filtreConsoMax" class="label-filtre"></label>
+                                    <input name="filtreConsoMax" class="input-filtre" id="filtreConsoMax" type="number" value="140" step="5" min="0" />
+                                </div>
+                                <div id="DfiltreConsoMin" class="Dfiltres">
+                                    <label for="filtreConsoMin" class="label-filtre"></label>
+                                    <input name="filtreConsoMin" class="input-filtre" id="filtreConsoMin" type="number" value="1" step="5" min="0" />
+                                </div>
+                            </div>
+                            <div id="DfiltreConsoAMT" class="optionnel col-md-4 col-sm-4 col-xs-6">
+                                <div id="DfiltreConsoAMTMax" class="Dfiltres">
+                                    <label for="filtreConsoAMTMax" class="label-filtre"></label>
+                                    <input name="filtreConsoAMTMax" class="input-filtre" id="filtreConsoAMTMax" type="number" value="1000" step="50" min="0" />
+                                </div>
+                                <div id="DfiltreConsoAMTMin" class="Dfiltres">
+                                    <label for="filtreConsoAMTMin" class="label-filtre"></label>
+                                    <input name="filtreConsoAMTMin" class="input-filtre" id="filtreConsoAMTMin" type="number" value="1" step="10" min="0" />
+                                </div>
+                            </div>
+                            <div id="DfiltreUtilisation" class="optionnel col-md-4 col-sm-4 col-xs-6">
+                                <div id="DfiltreKilo">
+                                    <div id="DfiltreKiloMax" class="Dfiltres">
+                                        <label for="filtreKiloMax" class="label-filtre"></label>
+                                        <input name="filtreKiloMax" class="input-filtre" id="filtreKiloMax" type="number" value="10000" step="1000" min="0" />
+                                    </div>
+                                    <div id="DfiltreKiloMin" class="Dfiltres">
+                                        <label for="filtreKiloMin" class="label-filtre"></label>
+                                        <input name="filtreKiloMin" class="input-filtre" id="filtreKiloMin" type="number" value="1" step="100" min="0" />
+                                    </div>
+                                </div>
+                                <div id="DfiltreHeures">
+                                    <div id="DfiltreHeuresMax" class="Dfiltres">
+                                        <label for="filtreHeuresMax" class="label-filtre"></label>
+                                        <input name="filtreHeuresMax" class="input-filtreHeure" id="filtreHeuresMax" type="number" value="750" min="0" /><b>:</b><input name="filtreMinutesMax" class="input-filtreMinute" id="filtreMinutesMax" type="number" value="0" max="59" min="0" />
+                                    </div>
+                                    <div id="DfiltreHeuresMin" class="Dfiltres">
+                                        <label for="filtreHeuresMin" class="label-filtre"></label>
+                                        <input name="filtreHeuresMin" class="input-filtreHeure" id="filtreHeuresMin" type="number" value="0" min="1" /><b>:</b><input name="filtreMinutesMin" class="input-filtreMinute" id="filtreMinutesMin" type="number" value="0" max="59" min="0" />
+                                    </div>
+                                </div>
+                            </div>                            
+                            <div id="DfiltrePlein" class="optionnel col-md-4 col-sm-4 col-xs-6">
+                                <div id="DfiltrePleinMax" class="Dfiltres">
+                                    <label for="filtrePleinMax" class="label-filtre"></label>
+                                    <input name="filtrePleinMax" class="input-filtre" id="filtrePleinMax" type="number" value="5000" step="250" min="0" />
+                                </div>
+                                <div id="DfiltrePleinMin" class="Dfiltres">
+                                    <label for="filtrePleinMin" class="label-filtre"></label>
+                                    <input name="filtrePleinMin" class="input-filtre" id="filtrePleinMin" type="number" value="1" step="50" min="0" />
+                                </div>
+                            </div>
+                            <div id="DfiltreVol" class="optionnel col-md-4 col-sm-4 col-xs-6">
+                                <div id="DfiltreVolMax" class="Dfiltres">
+                                    <label for="filtreVolMax" class="label-filtre"></label>
+                                    <input name="filtreVolMax" class="input-filtre" id="filtreVolMax" type="number" value="1000" step="100" min="0" />
+                                </div>
+                                <div id="DfiltreVolMin" class="Dfiltres">
+                                    <label for="filtreVolMin" class="label-filtre"></label>
+                                    <input name="filtreVolMin" class="input-filtre" id="filtreVolMin" type="number" value="1" step="25" min="0" />
+                                </div>
+                            </div>
+                            <div id="DfiltreEco" class="optionnel col-md-4 col-sm-4 col-xs-6">
+                                <div id="DfiltreNote">
+                                    <div id="DfiltreNoteMax" class="Dfiltres">
+                                        <label for="filtreNoteMax" class="label-filtre"></label>
+                                        <input name="filtreNoteMax" class="input-filtre" id="filtreNoteMax" type="number" value="6" step="0.5" max="6" min="0" />
+                                    </div>
+                                    <div id="DfiltreNoteMin" class="Dfiltres">
+                                        <label for="filtreNoteMin" class="label-filtre"></label>
+                                        <input name="filtreNoteMin" class="input-filtre" id="filtreNoteMin" type="number" value="1" step="0.5" max="6" min="0" />
+                                    </div>
+                                </div>
+                                <div id="DfiltreCo2">
+                                    <div id="DfiltreCo2Max" class="Dfiltres">
+                                        <label for="filtreCo2Max" class="label-filtre"></label>
+                                        <input name="filtreCo2Max" class="input-filtre" id="filtreCo2Max" type="number" value="10000" step="10" min="0" />
+                                    </div>
+                                    <div id="DfiltreCo2Min" class="Dfiltres">
+                                        <label for="filtreCo2Min" class="label-filtre"></label>
+                                        <input name="filtreCo2Min" class="input-filtre" id="filtreCo2Min" type="number" value="1" step="50" min="0" />
+                                    </div>
+                                </div>
+                            </div>                                                      
+                        </fieldset>
+                    </form>
+                    <form id="sourceConso" class="optionnel">
+                        <label><i></i></label>
+                        <input type="radio" id="sonde" name="source" value="sonde" class="in-radio" checked>
+                        <label for="sonde" class="uniteConso">FLS</label>
+                        <input type="radio" id="can-bus" name="source" value="can bus" class="in-radio">
+                        <label for="can-bus" class="uniteConso">CAN bus</label>                                           
+                    </form>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div id="divConso">
+                                <a href="#ancre">
+                                    <h4 id="titreConso"></h4>
+                                </a>                                                                                               
+                                <div id="conso">
+                                    <a href="#ancre">
+                                        <img src="img/logoConso.png" id="logoConso" alt="logo conso" class="logo"> 
+                                    </a>                                                                                                          
+                                    <div class="donneesBase">
+                                        <label id="consoMoy" class="labelMoy"></label><br>
+                                        <label id="consoMax" class="labelMax"></label><br>
+                                        <label id="consoMin" class="labelMin"></label>
+                                    </div>
+                                    <br>
+                                    <form id="uniteConso">
+                                        <label class="label-unite"></label>
+                                        <input type="radio" id="litreKm" name="unite" value="L/100km" class="in-radio" checked>
+                                        <label for="litreKm" class="uniteConso">L/100km</label>
+                                        <input type="radio" id="litreHeure" name="unite" value="L/h" class="in-radio">
+                                        <label for="litreHeure" class="uniteConso">L/h</label>                                           
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div id="divConsoAMT">
+                                <a href="#ancre">
+                                    <h4 id="titreConsoAMT"></h4>    
+                                </a>                                    
+                                <div id="consoAMT">
+                                    <a href="#ancre">
+                                        <img src="img/logoConsoAMT.png" id="logoConsoAMT" alt="logo conso AMT" class="logo">
+                                    </a>                                
+                                    <div class="donneesBase">
+                                        <label id="consoAMTTot" class="labelMoy"></label><br>
+                                        <label id="consoAMTMax" class="labelMax"></label><br>
+                                        <label id="consoAMTMin" class="labelMin"></label>
+                                    </div>    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div id="divUtilisation">
+                                <a href="#ancre">
+                                    <h4 id="titreUtilisation"></h4>    
+                                </a>                                
+                                <div id="utilisation">
+                                    <a href="#ancre" id="logoUtilisation">
+                                        <img src="img/logoKilometrage.png" id="logoKilometrage" alt="logo kilométrage" class="logo">
+                                        <img src="img/logoHeuresMoteur.png" id="logoHeuresMoteur" alt="logo heures moteur" class="logo">
+                                    </a>                                    
+                                    <div class="donneesBase">
+                                        <label id="utilisationTot" class="labelMoy"></label><br>
+                                        <label id="utilisationMax" class="labelMax"></label><br>
+                                        <label id="utilisationMin" class="labelMin"></label>
+                                    </div>    
+                                    <br>
+                                    <form id="uniteUtilisation">
+                                        <input type="radio" id="kilometrage" name="utilisation" value="km" class="in-radio" checked>
+                                        <label for="kilometrage" id="labKm" class="uniteUtilisation"></label>
+                                        <input type="radio" id="heuresMoteur" name="utilisation" value="h" class="in-radio">
+                                        <label for="heuresMoteur" id="labH" class="uniteUtilisation"></label>                                           
+                                    </form>
+                                </div>
+                            </div>
+                        </div>                    
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div id="divPleins">
+                                <a href="#ancre">
+                                    <h4 id="titrePleins"></h4>
+                                </a>                                
+                                <div id="pleins">
+                                    <a href="#ancre">
+                                        <img src="img/logoPleins.jpg" id="logoPleins" alt="logo pleins" class="logo">
+                                    </a>                                                                        
+                                    <div class="donneesBase">
+                                        <label id="pleinTot" class="labelMoy"></label><br>
+                                        <label id="pleinMax" class="labelMax"></label><br>
+                                        <label id="pleinMin" class="labelMin"></label>
+                                    </div>    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div id="divVols">
+                                <a href="#ancre">
+                                    <h4 id="titreVols"></h4>  
+                                </a>                                                             
+                                <div id="Vols">
+                                    <a href="#ancre">
+                                        <img src="img/logoVols.png" id="logoVols" alt="logo vols" class="logo">
+                                    </a>                                                                        
+                                    <div class="donneesBase">
+                                        <label id="volTot" class="labelMoy"></label><br>
+                                        <label id="volMax" class="labelMax"></label><br>
+                                        <label id="volMin" class="labelMin"></label>
+                                    </div>    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div id="divEco">
+                                <a href="#ancre">
+                                    <h4 id="titreEco"></h4>  
+                                </a>                                                            
+                                <div id="Eco">
+                                    <a href="#ancre">
+                                        <img src="img/logoEco.jpg" id="logoEco" alt="logo eco-impact" class="logo">
+                                    </a>                                    
+                                    <div class="donneesBase">
+                                        <label id="ecoMoy" class="labelMoy"></label><br>
+                                        <label id="ecoMax" class="labelMax"></label><br>
+                                        <label id="ecoMin" class="labelMin"></label>
+                                    </div>  
+                                    <br>
+                                    <form id="choixEco">
+                                        <input type="radio" id="co2" name="eco" value="km" class="in-radio" checked>
+                                        <label for="co2" id="labCo2" class="uniteUtilisation"></label>
+                                        <input type="radio" id="note" name="eco" value="h" class="in-radio">
+                                        <label for="note" id="labNote" class="uniteUtilisation"></label>                                           
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><br> 
+                <div id="details">
+                    <h5 id="ancre"></h5>
+                    <table id="scheme-head">
+                        <thead id="tabhead"></thead>                
+                        <tbody id="tabbody"></tbody>
+                    </table>
+                    <br><br>
+                </div>                                 
+            </div>
+        </div>
+        <select id="res" style="visibility:hidden;"></select>
+        <div id="log"></div>
+        <script type="text/javascript" src="js/config.js"></script>
+        <script type="text/javascript" src="js/script.js"></script>
+    </body>
+</html>
